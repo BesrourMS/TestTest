@@ -1,0 +1,117 @@
+<h1>Gerer Payement</h1>
+<!-- <a routerLink="/contrat">Contrat</a> -->
+ <router-outlet></router-outlet>
+<h3 *ngIf="payementIdToUpdate; else create"> 
+   Update Payement for Id: {{payementIdToUpdate}}
+</h3>
+<ng-template #create>
+   <h3> Create New Payement </h3>
+</ng-template>
+<div>
+ <form [formGroup]="payementForm" (ngSubmit)="onPayementFormSubmit()">
+  <table>
+		<tr><td>Client:</td><td>
+					<select formControlName="client">
+						<option selected disabled value="">Select Client</option>
+						<option *ngFor="let titre of allClients" [value]="titre">
+							{{titre}}
+						</option>
+					</select>
+					<label *ngIf="payementForm.get('client').invalid && processValidation" [ngClass] = "'error'"> Proprietaire  is required. </label>				
+					<button type= button (click)="buttonCreateClient()">Create new Client</button>
+	</td></tr>
+	<tr><td>Contrat:</td><td>
+					<select formControlName="contrat">
+						<option selected disabled value="">Select Contrat</option>
+						<option *ngFor="let titre of allContrats" [value]="titre">
+							{{titre}}
+						</option>
+					</select>
+					<button type= button (click)="buttonCreateContrat()">Create new Contrat</button>
+	</td></tr>
+    <tr><td>Titre</td><td><input formControlName="titrePayement">
+    </td></tr>
+    <tr><td>Description</td><td><input formControlName="descPayement">
+    </td></tr>
+	<tr><td>Type</td><td><input formControlName="typePayement">
+    </td></tr>
+	<tr><td>Montant</td><td><input type = number formControlName="montant">
+    </td></tr>
+	<tr><td>author</td><td><input formControlName="author">
+    </td></tr>
+	<tr><td></td><td><input type="file"
+							ngFileSelect
+							[options]="options"
+							(change)="fileEvent($event)" 
+							(onUpload)="handleUpload($event)"
+							(beforeUpload)="beforeUpload($event)">
+ 
+							<!-- drag & drop file example-->
+							<style>
+								.file-over { border: dotted 3px red; } /* Default class applied to drop zones on over */
+							</style> 
+							<div ngFileDrop
+							[options]="options"
+							(change)="fileEvent($event)"
+							(onUpload)="handleUpload($event)"
+							[ngClass]="{'file-over': hasBaseDropZoneOver}"
+							(onFileOver)="fileOverBase($event)"
+							(beforeUpload)="beforeUpload($event)">
+							</div>
+						Response: {{ uploadFile | json }}</td></tr>
+    <tr><td colspan="2">
+	    <button *ngIf="!payementIdToUpdate">CREATE</button>  
+		<button *ngIf="payementIdToUpdate">UPDATE</button>  
+	    <button (click)="backToCreatePayement()" *ngIf="payementIdToUpdate">Go Back</button>  
+    </td></tr>
+  </table>
+ </form> 
+ <br/>
+ <div *ngIf="statusCode; else processing">
+   <div *ngIf="statusCode === 201" [ngClass] = "'success'">
+	 Payement added successfully.
+   </div>   
+   <div *ngIf="statusCode === 409" [ngClass] = "'success'">
+        Payement already exists.
+   </div>   	
+   <div *ngIf="statusCode === 200" [ngClass] = "'success'">
+        Payement updated successfully.
+   </div>   	      
+   <div *ngIf="statusCode === 204" [ngClass] = "'success'">
+        Payement deleted successfully.
+   </div>   	   
+   <div *ngIf="statusCode === 500" [ngClass] = "'error'">
+        Internal Server Error.
+   </div>   	
+ </div>
+ <ng-template #processing>
+	<img *ngIf="requestProcessing" src="assets/load.gif">
+ </ng-template>
+</div>
+<h3>Payement Details</h3>
+<table>
+  <tr>
+	<th> Id</th> 
+	<th>Titre</th>
+	<th>Description</th>
+	<th>Type</th>
+	<th>Montant</th>
+	<th>author</th>
+	<th>Client</th>
+	<th>Contrat</th>
+	<th></th><th></th>
+  </tr>
+  <tr *ngFor="let payement of allPayements" >
+        <td *ngIf="payement.author==idUser">{{payement.idPayement}}</td>
+		<td *ngIf="payement.author==idUser">{{payement.titrePayement}}</td> 
+		<td *ngIf="payement.author==idUser">{{payement.descPayement}}</td>
+		<td *ngIf="payement.author==idUser">{{payement.typePayement}}</td>
+		<td *ngIf="payement.author==idUser">{{payement.montant}}</td>
+		<td *ngIf="payement.author==idUser">{{payement.author}}</td>
+		<td *ngIf="payement.author==idUser">{{payement.client.nomClient}}</td>
+		<td *ngIf="payement.contrat&&payement.author==idUser">{{payement.contrat.titreContrat}}</td>
+		<td *ngIf="!payement.contrat&&payement.author==idUser">null</td>
+		<td *ngIf="payement.author==idUser"><button type="button" (click)="loadPayementToEdit(payement.idPayement)">Edit</button> </td> 
+		<td *ngIf="payement.author==idUser"><button type="button" (click)="deletePayement(payement.idPayement)">Delete</button></td>
+  </tr>
+</table> 

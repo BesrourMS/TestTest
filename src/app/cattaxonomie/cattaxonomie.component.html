@@ -1,0 +1,96 @@
+<h1 *ngIf="!catTaxonomieToUpdate"> Home</h1>
+<h1 *ngIf="catTaxonomieToUpdate"> Taxonomie</h1>
+<h3 *ngIf="catTaxonomieToUpdate&& !taxonomieIdToUpdate; else create"> 
+   add Element for : {{catTaxonomieToUpdate.titreCatTaxonomie}}
+</h3>
+<ng-template #create>
+   <h3> Create New Taxonomie </h3>
+</ng-template>
+
+<div>
+ <form [formGroup]="catTaxonomieForm" (ngSubmit)="onCatTaxonomieFormSubmit()">
+  <table>
+    <!-- <tr *ngIf="!catTaxonomieToUpdate"><td>Titre Categorie</td><td><input formControlName="titreCatTaxonomie">
+    </td></tr>
+	<tr *ngIf="!catTaxonomieToUpdate"><td>Description Categorie</td><td><input formControlName="descCatTaxonomie">
+    </td></tr> -->
+	<tr *ngIf="catTaxonomieToUpdate"><td>Titre of Element to add</td><td><input formControlName="titreTaxonomie">
+    </td></tr>
+	<tr *ngIf="catTaxonomieToUpdate"><td>Description of Element</td><td><input formControlName="descTaxonomie">
+    </td></tr>
+	<tr *ngIf="catTaxonomieToUpdate"><td>Author</td><td><input formControlName="author">
+    </td></tr>
+    <tr><td colspan="2">
+	   <!--  <button *ngIf="!catTaxonomieToUpdate && !catTaxonomieIdToUpdate">CREATE</button>
+		<button *ngIf="!catTaxonomieToUpdate && catTaxonomieIdToUpdate">Update</button>
+		<button (click)="backToCreateTaxonomie()" *ngIf="!catTaxonomieToUpdate && catTaxonomieIdToUpdate">Go Back</button> -->
+		<button *ngIf="catTaxonomieToUpdate && !taxonomieIdToUpdate">Add Element</button> 
+		<button *ngIf="catTaxonomieToUpdate && taxonomieIdToUpdate">Update Element</button>
+		<button (click)="backToCreateTaxonomie()" *ngIf="catTaxonomieToUpdate && taxonomieIdToUpdate">Go Back</button>
+	    <button (click)="backToCreateCatTaxonomie()" *ngIf="catTaxonomieToUpdate">Go Back To HomePage</button>  
+    </td></tr>
+  </table>
+ </form> 
+ <br/>
+ <div *ngIf="statusCode; else processing">
+						<div *ngIf="statusCode === 201" [ngClass] = "'success'">
+							Client added successfully.
+					</div>   
+					<div *ngIf="statusCode === 409" [ngClass] = "'success'">
+							Client already exists.
+					</div>   	
+					<div *ngIf="statusCode === 200" [ngClass] = "'success'">
+							Client updated successfully.
+					</div>   	      
+					<div *ngIf="statusCode === 204" [ngClass] = "'success'">
+						Client deleted successfully.
+					</div>   	   
+					<div *ngIf="statusCode === 500" [ngClass] = "'error'">
+							Internal Server Error.
+					</div>   	
+					</div>
+						<ng-template #processing>
+							<img *ngIf="requestProcessing" src="assets/load.gif">
+						</ng-template>
+					</div>
+<h1></h1>
+<table *ngIf="!catTaxonomieToUpdate">
+  <tr> 
+	<th>Titre</th>
+	<th></th><th></th>
+  </tr>
+  <tr (click)="pageClient()"><td>Client</td></tr>
+  <tr (click)="pagePropriete()"><td>Propriete</td></tr>
+  <tr (click)="pageContrat()"><td>Contrat</td></tr>
+  <tr (click)="pagePayement()"><td>Payement</td></tr>
+  <tr (click)="pageDepenses()"><td>Depenses</td></tr>
+  <tr *ngFor="let catTaxonomie of allCatTaxonomies" >
+        <td (click)="loadCatTaxonomieToEdit(catTaxonomie)">{{catTaxonomie.titreCatTaxonomie}}</td>
+		<!-- <td *ngIf="catTaxonomie">
+		<label *ngFor="let taxonomie of allTaxonomies">
+			<label *ngIf="taxonomie.catTaxonomie.titreCatTaxonomie===catTaxonomie.titreCatTaxonomie">
+							{{taxonomie.titreTaxonomie}}
+						</label>
+		</label>
+		</td>  -->
+	<!-- <td><button type="button" (click)="loadCatTaxonomieToUpdate(catTaxonomie.idCatTaxonomie)">Uppdate</button> </td> 
+	<td><button type="button" (click)="deleteCatTaxonomie(catTaxonomie.idCatTaxonomie)">Delete</button></td> -->
+  </tr>
+ </table>
+ <table *ngIf="catTaxonomieToUpdate">
+  <tr> 
+	<th>Titre</th>
+	<th> Description</th>
+	<th> Author</th>
+	<th></th><th></th>
+  </tr>
+  <tr *ngFor="let taxonomie of allTaxonomies">
+	<td *ngIf="taxonomie.catTaxonomie.titreCatTaxonomie===catTaxonomieToUpdate.titreCatTaxonomie && taxonomie.author==idUser">{{taxonomie.titreTaxonomie}}</td>
+	<td *ngIf="taxonomie.catTaxonomie.titreCatTaxonomie===catTaxonomieToUpdate.titreCatTaxonomie && taxonomie.author==idUser">{{taxonomie.descTaxonomie}}</td>
+	<td *ngIf="taxonomie.catTaxonomie.titreCatTaxonomie===catTaxonomieToUpdate.titreCatTaxonomie && taxonomie.author==idUser">{{taxonomie.author}}</td>
+	<td *ngIf="taxonomie.catTaxonomie.titreCatTaxonomie===catTaxonomieToUpdate.titreCatTaxonomie && taxonomie.author==idUser"><button type="button" (click)="loadTaxonomieToUpdate(taxonomie.idTaxonomie)">Uppdate</button> </td> 
+	<td *ngIf="taxonomie.catTaxonomie.titreCatTaxonomie===catTaxonomieToUpdate.titreCatTaxonomie && taxonomie.author==idUser"><button type="button" (click)="deleteTaxonomie(taxonomie.idTaxonomie)">Delete</button></td>
+  </tr> 
+</table> 
+ 
+ 

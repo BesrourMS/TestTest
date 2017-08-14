@@ -1,0 +1,187 @@
+<h1>Gerer Contrat</h1>
+<!-- <a routerLink="/contrat">Contrat</a> -->
+ <router-outlet></router-outlet>
+<h3 *ngIf="contratIdToUpdate; else create"> 
+   Update Contrat for Id: {{contratIdToUpdate}}
+</h3>
+<ng-template #create>
+   <h3> Create New Contrat </h3>
+</ng-template>
+<div>
+ <form [formGroup]="contratForm" (ngSubmit)="onContratFormSubmit()">
+  <table>
+		<tr><td>Proprietaire:</td><td>
+					<select formControlName="proprietaire">
+						<option selected disabled value="">Select Proprietaire</option>
+						<option *ngFor="let titre of allClients" [value]="titre">
+							{{titre}}
+						</option>
+					</select>
+					<label *ngIf="contratForm.get('proprietaire').invalid && processValidation" [ngClass] = "'error'"> Proprietaire  is required. </label>				
+					<button type= button (click)="buttonCreateClient()">Create new Proprietaire</button>
+	</td></tr>
+	<tr><td>Client:</td><td>
+					<select formControlName="client">
+						<option selected disabled value="">Select Client</option>
+						<option *ngFor="let titre of allClients" [value]="titre">
+							{{titre}}
+						</option>
+					</select>
+					<label *ngIf="contratForm.get('client').invalid && processValidation" [ngClass] = "'error'"> Client  is required. </label>				
+					<button type= button (click)="buttonCreateClient()">Create new Client</button>
+	</td></tr>
+	<tr><td>Propriete:</td><td>
+					<select formControlName="titrePropriete">
+						<option selected disabled value="">Select Propriete</option>
+						<option *ngFor="let titre of allProprietes" [value]="titre">
+							{{titre}}
+						</option>
+					</select>
+					<label *ngIf="contratForm.get('titrePropriete').invalid && processValidation" [ngClass] = "'error'"> Propriete  is required. </label>				
+					<button type= button (click)="buttonCreatePropriete()">Create new Propriete</button>
+	</td></tr>
+	<tr><td *ngIf="!textModelContrat">Model Contrat:</td><td *ngIf="textModelContrat">Titre Model Contrat:</td><td><!-- <input formControlName="titreCatDepenses" list="exampleList"> -->
+					<!-- <datalist  id="exampleList"> -->
+					<select *ngIf="!textModelContrat" formControlName="titreModelContrat">
+						<option selected disabled value="">Select Categorie depenses</option>
+						<option *ngFor="let titre of allModelContrats" [value]="titre">
+							{{titre}}
+						</option>
+					</select>
+					<label *ngIf="!textModelContrat && contratForm.get('titreModelContrat').invalid && processValidation" [ngClass] = "'error'"> Model Contrat  is required. </label>					
+					<input type= text *ngIf="textModelContrat" formControlName="titreModelContratEnr">
+					<label *ngIf="contratForm.get('titreModelContratEnr').invalid && processValidation && textModelContrat" [ngClass] = "'error'"> titre Model Contrat  is required. </label>
+					<label *ngIf="textModelContrat">Texte Model Contrat</label>
+					<input type= text *ngIf="textModelContrat" formControlName="descModelContrat">
+					<label *ngIf="contratForm.get('descModelContrat').invalid && processValidation && textModelContrat" [ngClass] = "'error'"> text Model Contrat  is required. </label>
+					<!-- </datalist> -->
+					<button (click)="buttonCreateModelContrat()" *ngIf="!textModelContrat">Create new Model Contrat</button>
+	</td></tr>
+    <tr><td>Titre</td><td><input formControlName="titreContrat">
+	       <label *ngIf="contratForm.get('titreContrat').invalid && processValidation" [ngClass] = "'error'"> Titre is required. </label>
+    </td></tr>
+    <tr><td>Date</td><td><input type = date formControlName="dateContrat">
+	       <label *ngIf="contratForm.get('dateContrat').invalid && processValidation" [ngClass] = "'error'"> Date is required. </label>
+    </td></tr>
+	<tr><td>Honoraire</td><td><input type = number formControlName="honoraire">
+	       <label *ngIf="contratForm.get('honoraire').invalid && processValidation" [ngClass] = "'error'"> Honoraire is required. </label>
+    </td></tr>
+	<tr><td>Montant de Vente</td><td><input type = number formControlName="montantVente">
+	       <label *ngIf="contratForm.get('montantVente').invalid && processValidation" [ngClass] = "'error'"> Number  is required. </label>
+    </td></tr>
+	<tr><td>Montant de Location</td><td><input type= number formControlName="montantLocation">
+	       <label *ngIf="contratForm.get('montantLocation').invalid && processValidation" [ngClass] = "'error'"> Number is required. </label>
+    </td></tr>
+	<tr><td>author</td><td><input formControlName="author">
+	       <label *ngIf="contratForm.get('author').invalid && processValidation" [ngClass] = "'error'"> Name is required. </label>
+    </td></tr>
+	<tr><td>Date Debut </td><td><input type= date formControlName="dateDebut">
+	       <label *ngIf="contratForm.get('dateDebut').invalid && processValidation" [ngClass] = "'error'"> Date is required. </label>
+    </td></tr>
+	<tr><td>Date Fin</td><td><input type= date formControlName="dateFin">
+	       <label *ngIf="contratForm.get('dateFin').invalid && processValidation" [ngClass] = "'error'"> Date is required. </label>
+    </td></tr>
+	<tr><td>Periode de Payement en jour</td><td><input type= number formControlName="periodeMontant">
+	       <label *ngIf="contratForm.get('periodeMontant').invalid && processValidation" [ngClass] = "'error'"> Number is required. </label>
+    </td></tr>
+	<tr><td>Date de Notification</td><td><input type= date formControlName="dateNotification">
+	       <label *ngIf="contratForm.get('dateNotification').invalid && processValidation" [ngClass] = "'error'"> Date is required. </label>
+    </td></tr>
+	<tr><td>Date de Notification de Renouvellement</td><td><input type= date formControlName="notRenou">
+	       <label *ngIf="contratForm.get('notRenou').invalid && processValidation" [ngClass] = "'error'"> Date is required. </label>
+    </td></tr>
+	<tr><td>Caution</td><td><input type= number formControlName="caution">
+	       <label *ngIf="contratForm.get('caution').invalid && processValidation" [ngClass] = "'error'"> Number is required. </label>
+    </td></tr>
+	<tr><td></td><td><input type="file"
+							ngFileSelect
+							[options]="options"
+							(change)="fileEvent($event)" 
+							(onUpload)="handleUpload($event)"
+							(beforeUpload)="beforeUpload($event)">
+ 
+							<!-- drag & drop file example-->
+							<style>
+								.file-over { border: dotted 3px red; } /* Default class applied to drop zones on over */
+							</style> 
+							<div ngFileDrop
+							[options]="options"
+							(change)="fileEvent($event)"
+							(onUpload)="handleUpload($event)"
+							[ngClass]="{'file-over': hasBaseDropZoneOver}"
+							(onFileOver)="fileOverBase($event)"
+							(beforeUpload)="beforeUpload($event)">
+							</div>
+						Response: {{ uploadFile | json }}</td></tr>
+    <tr><td colspan="2">
+	    <button *ngIf="!contratIdToUpdate">CREATE</button>  
+		<button *ngIf="contratIdToUpdate">UPDATE</button>  
+	    <button (click)="backToCreateContrat()" *ngIf="contratIdToUpdate">Go Back</button>  
+    </td></tr>
+  </table>
+ </form> 
+ <br/>
+ <div *ngIf="statusCode; else processing">
+   <div *ngIf="statusCode === 201" [ngClass] = "'success'">
+	 Contrat added successfully.
+   </div>   
+   <div *ngIf="statusCode === 409" [ngClass] = "'success'">
+        Contrat already exists.
+   </div>   	
+   <div *ngIf="statusCode === 200" [ngClass] = "'success'">
+        Contrat updated successfully.
+   </div>   	      
+   <div *ngIf="statusCode === 204" [ngClass] = "'success'">
+        Contrat deleted successfully.
+   </div>   	   
+   <div *ngIf="statusCode === 500" [ngClass] = "'error'">
+        Internal Server Error.
+   </div>   	
+ </div>
+ <ng-template #processing>
+	<img *ngIf="requestProcessing" src="assets/load.gif">
+ </ng-template>
+</div>
+<h3>Contrat Details</h3>
+<table>
+  <tr>
+	<th> Id</th> 
+	<th>Titre</th>
+	<th>Date</th>
+	<th>honoraire</th>
+	<th>montant de Vente</th>
+	<th>montant de Location</th>
+	<th>date Debut</th>
+	<th>periode de payement</th>
+	<th>date Fin</th>
+	<th>date Notification</th>
+	<th>date notification Renouvellement</th>
+	<th>caution</th>
+	<th>author</th>
+	<th>Propriete</th>
+	<th>Model Contrat</th>
+	<th>Client</th>
+	<th>Proprietaire</th>
+	<th></th><th></th>
+  </tr>
+  <tr *ngFor="let contrat of allContrats" >
+        <td *ngIf="contrat.author==idUser">{{contrat.idContrat}}</td>
+		<td *ngIf="contrat.author==idUser">{{contrat.titreContrat}}</td> 
+		<td *ngIf="contrat.author==idUser">{{contrat.dateContrat}}</td>
+		<td *ngIf="contrat.author==idUser">{{contrat.honoraire}}</td>
+		<td *ngIf="contrat.author==idUser">{{contrat.montantVente}}</td>
+		<td *ngIf="contrat.author==idUser">{{contrat.montantLocation}}</td>
+		<td *ngIf="contrat.author==idUser">{{contrat.dateDebut}}</td>
+		<td *ngIf="contrat.author==idUser">{{contrat.periodeMontant}}</td>
+		<td *ngIf="contrat.author==idUser">{{contrat.dateFin}}</td>
+		<td *ngIf="contrat.author==idUser">{{contrat.dateNotification}}</td>
+		<td *ngIf="contrat.author==idUser">{{contrat.notRenou}}</td>
+		<td *ngIf="contrat.author==idUser">{{contrat.caution}}</td>
+		<td *ngIf="contrat.author==idUser">{{contrat.author}}</td>
+		<td *ngIf="contrat.author==idUser">{{contrat.propriete.titrePropriete}}</td>
+		<td *ngIf="contrat.author==idUser">{{contrat.modelContrat.titreModelContrat}}</td>
+		<td *ngFor="let client of contrat.clients && contrat.author==idUser">{{client.nomClient}}</td>
+	<td *ngIf="contrat.author==idUser"><button type="button" (click)="loadContratToEdit(contrat.idContrat)">Edit</button> </td> 
+	<td *ngIf="contrat.author==idUser"><button type="button" (click)="deleteContrat(contrat.idContrat)">Delete</button></td>
+  </tr>
+</table> 

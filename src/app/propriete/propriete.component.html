@@ -1,0 +1,213 @@
+<h1>Gerer Propriete</h1>
+<h3 *ngIf="proprieteIdToUpdate; else create"> 
+   Update Propriete for Id: {{proprieteIdToUpdate}}
+</h3>
+<ng-template #create>
+   <h3> Create New Propriete </h3>
+</ng-template>
+<div>
+ <form [formGroup]="proprieteForm" (ngSubmit)="onProprieteFormSubmit()">
+  <table>
+	<tr><td>Client:</td><td>
+					<select formControlName="nomClient">
+						<option selected disabled value="">Select Client</option>
+						<option *ngFor="let titre of allClients" [value]="titre">
+							{{titre}}
+						</option>
+					</select>
+					<button type= button (click)="buttonCreateClient()">Create new Client</button>
+	</td></tr>
+    <tr><td>Titre</td><td><input formControlName="titrePropriete">
+	       <label *ngIf="proprieteForm.get('titrePropriete').invalid && processValidation" [ngClass] = "'error'"> Titre is required. </label>
+    </td></tr>
+    <tr><td>Description</td><td><input formControlName="descriptionProp"></td></tr>
+	<tr><td>Image</td><td><image-upload
+									[url]="'http://localhost:8080/user/uploadimage'"
+									(change)="fileEvent($event)"
+									(onUpload)="handleUpload($event)"
+									(beforeUpload)="beforeUpload($event)"
+							></image-upload>
+							<img [src]="url" width="50" height="70" alt="Preivew"/> 
+						<!-- <button type= button (click)="createDoc()">save</button> -->
+	<!-- <input type="file"
+				ngFileSelect
+				[options]="options"
+				(change)="fileEvent($event)" 
+				(onUpload)="handleUpload($event)"
+				(beforeUpload)="beforeUpload($event)">
+ 
+					<!-- drag & drop file example
+					<style>
+						.file-over { border: dotted 3px red; } /* Default class applied to drop zones on over */
+					</style> 
+					<div ngFileDrop
+						[options]="options"
+						(change)="fileEvent($event)"
+						(onUpload)="handleUpload($event)"
+						[ngClass]="{'file-over': hasBaseDropZoneOver}"
+						(onFileOver)="fileOverBase($event)"
+						(beforeUpload)="beforeUpload($event)">
+					</div> -->
+							Response: {{ uploadFile | json }}</td></tr>
+	<tr><td>Reference Propriete</td><td><input formControlName="referenceProp"></td></tr>
+	<tr><td>Annee de Construction</td><td><input type = date formControlName="anneeConstProp"></td></tr>
+	<tr><td>Prix</td><td><input type= number formControlName="prix"></td></tr>
+	<tr><td>author</td><td><input formControlName="author"></td></tr>
+	<tr><td>Chambres </td><td><input type= number formControlName="chambres"></td></tr>
+	<tr><td>Lits</td><td><input type= number formControlName="lits"></td></tr>
+	<tr><td>Salles de Bain</td><td><input type= number formControlName="sallesBain"></td></tr>
+	<tr><td>Garages</td><td><input type= number formControlName="garages"></td></tr>
+	<tr><td>Surface</td><td><input type= number formControlName="surfaceProp"></td></tr>
+	<tr><td>Dimensions Lotissements</td><td><input formControlName="dimLotissements"></td></tr>
+	<tr><td>Surface Lotissements</td><td><input type= number formControlName="surfaceLot"></td></tr>
+	<tr><td>Lien Video</td><td><input formControlName="lienVideo"></td></tr>
+	<tr><td>Region Latitude</td><td><input type= number formControlName="regLat"></td></tr>
+	<tr><td>Region Longitude</td><td><input type= number formControlName="regLong"></td></tr>
+	<tr><td>Is Demand</td><td><input formControlName="isDemande"></td></tr>
+	<tr><td>Galerie</td><td><image-upload
+									[url]="'http://localhost:8080/user/uploadimage'"
+									(change)="fileGalerie($event)"
+									(onUpload)="handleUpload($event)"
+									(beforeUpload)="beforeUpload($event)"
+							></image-upload></td></tr>
+	<tr><td>plan Etage</td><td><input formControlName="planEtage"></td></tr>
+	<tr><td>Types</td><td>
+			<select formControlName="types">
+						<option selected disabled value="">Select Types</option>
+						<option *ngFor="let taxonomie of allTaxonomies" [value]="taxonomie.titreTaxonomie">
+							<label *ngIf="taxonomie.catTaxonomie.idCatTaxonomie===6">{{taxonomie.titreTaxonomie}}</label>
+						</option>
+					</select>
+		</td>
+	<tr><td>Types Of Offre</td><td>
+			<select formControlName="typeOffre">
+						<option selected disabled value="">Select Types of Offre</option>
+						<option *ngFor="let taxonomie of allTaxonomies" [value]="taxonomie.titreTaxonomie">
+							<label *ngIf="taxonomie.catTaxonomie.idCatTaxonomie===7">{{taxonomie.titreTaxonomie}}</label>
+						</option>
+					</select>
+		</td>
+	<tr><td>Region</td><td>
+			<select formControlName="region">
+						<option selected disabled value="">Select Region</option>
+						<option *ngFor="let taxonomie of allTaxonomies" [value]="taxonomie.titreTaxonomie">
+							<label *ngIf="taxonomie.catTaxonomie.idCatTaxonomie===1">{{taxonomie.titreTaxonomie}}</label>
+						</option>
+					</select>
+		</td>
+	<tr><td>Status</td><td>
+			<select formControlName="statusProp">
+						<option selected disabled value="">Select Status</option>
+						<option *ngFor="let taxonomie of allTaxonomies" [value]="taxonomie.titreTaxonomie">
+							<label *ngIf="taxonomie.catTaxonomie.idCatTaxonomie===8">{{taxonomie.titreTaxonomie}}</label>
+						</option>
+					</select>
+		</td>
+	<tr><td>Material</td><td>
+			<select formControlName="material">
+						<option selected disabled value="">Select Materials</option>
+						<option *ngFor="let taxonomie of allTaxonomies" [value]="taxonomie.titreTaxonomie">
+							<label *ngIf="taxonomie.catTaxonomie.idCatTaxonomie===2">{{taxonomie.titreTaxonomie}}</label>
+						</option>
+					</select>
+		</td>
+	<tr><td>Equippements</td><td>
+			<select formControlName="equippementsProp">
+						<option selected disabled value="">Select Equippements</option>
+						<option *ngFor="let taxonomie of allTaxonomies" [value]="taxonomie.titreTaxonomie">
+							<label *ngIf="taxonomie.catTaxonomie.idCatTaxonomie===3">{{taxonomie.titreTaxonomie}}</label>
+						</option>
+					</select>
+		</td></tr>
+	
+    <tr><td colspan="2">
+	    <button *ngIf="!proprieteIdToUpdate">CREATE</button>  
+		<button *ngIf="proprieteIdToUpdate">UPDATE</button>  
+	    <button (click)="backToCreatePropriete()" *ngIf="proprieteIdToUpdate">Go Back</button>  
+    </td></tr>
+  </table>
+ </form> 
+ <br/>
+ <div *ngIf="statusCode; else processing">
+   <div *ngIf="statusCode === 201" [ngClass] = "'success'">
+	 Propriete added successfully.
+   </div>   
+   <div *ngIf="statusCode === 409" [ngClass] = "'success'">
+        Propriete already exists.
+   </div>   	
+   <div *ngIf="statusCode === 200" [ngClass] = "'success'">
+        Propriete updated successfully.
+   </div>   	      
+   <div *ngIf="statusCode === 204" [ngClass] = "'success'">
+        Propriete deleted successfully.
+   </div>   	   
+   <div *ngIf="statusCode === 500" [ngClass] = "'error'">
+        Internal Server Error.
+   </div>   	
+ </div>
+ <ng-template #processing>
+	<img *ngIf="requestProcessing" src="assets/load.gif">
+ </ng-template>
+
+<h3>Propriete Details</h3>
+<table>
+  <tr>
+	<th> Id</th> 
+	<th>Titre</th>
+	<th>Description</th>
+	<th>Reference Propriete</th>
+	<th>Annee de Construction</th>
+	<th>Prix</th>
+	<th>Chambres</th>
+	<th>Lits</th>
+	<th>Salles de Bain</th>
+	<th>Garages</th>
+	<th>Surface</th>
+	<th>Dimensions de Lotissements</th>
+	<th>Surface de Lotissements</th>
+	<th>Lien Video</th>
+	<th>Region Latitude</th>
+	<th>Region Longitude</th>
+	<th>Is Demand</th>
+	<th>plan Etage</th>
+	<th>types</th>
+	<th>type de l'offre</th>
+	<th>Region</th>
+	<th>Status</th>
+	<th>Material</th>
+	<th>Equippements</th>
+	<th>Client</th>
+	<th>author</th>
+	<th></th><th></th>
+  </tr>
+  <tr *ngFor="let propriete of allProprietes" >
+        <td *ngIf="propriete.author==idUser">{{propriete.idPropriete}}</td>
+		<td *ngIf="propriete.author==idUser">{{propriete.titrePropriete}}</td> 
+		<td *ngIf="propriete.author==idUser">{{propriete.descriptionProp}}</td>
+		<td *ngIf="propriete.author==idUser">{{propriete.referenceProp}}</td>
+		<td *ngIf="propriete.author==idUser">{{propriete.anneeConstProp}}</td>
+		<td *ngIf="propriete.author==idUser">{{propriete.prix}}</td>
+		<td *ngIf="propriete.author==idUser">{{propriete.chambres}}</td>
+		<td *ngIf="propriete.author==idUser">{{propriete.lits}}</td>
+		<td *ngIf="propriete.author==idUser">{{propriete.sallesBain}}</td>
+		<td *ngIf="propriete.author==idUser">{{propriete.garages}}</td>
+		<td *ngIf="propriete.author==idUser">{{propriete.surfaceProp}}</td>
+		<td *ngIf="propriete.author==idUser">{{propriete.dimLotissements}}</td>
+		<td *ngIf="propriete.author==idUser">{{propriete.surfaceLot}}</td>
+		<td *ngIf="propriete.author==idUser">{{propriete.lienVideo}}</td>
+		<td *ngIf="propriete.author==idUser">{{propriete.regLat}}</td>
+		<td *ngIf="propriete.author==idUser">{{propriete.regLong}}</td>
+		<td *ngIf="propriete.author==idUser">{{propriete.isDemande}}</td>
+		<td *ngIf="propriete.author==idUser">{{propriete.planEtage}}</td>
+		<td *ngIf="propriete.author==idUser">{{propriete.taxonomies[0].titreTaxonomie}}</td>
+		<td *ngIf="propriete.author==idUser">{{propriete.taxonomies[1].titreTaxonomie}}</td>
+		<td *ngIf="propriete.author==idUser">{{propriete.taxonomies[2].titreTaxonomie}}</td>
+		<td *ngIf="propriete.author==idUser">{{propriete.taxonomies[3].titreTaxonomie}}</td>
+		<td *ngIf="propriete.author==idUser">{{propriete.taxonomies[4].titreTaxonomie}}</td>
+		<td *ngIf="propriete.author==idUser">{{propriete.taxonomies[5].titreTaxonomie}}</td>
+		<td *ngIf="propriete.author==idUser">{{propriete.client.nomClient}}</td>
+		<td *ngIf="propriete.author==idUser">{{propriete.author}}</td>
+	<td *ngIf="propriete.author==idUser"><button type="button" (click)="loadProprieteToEdit(propriete.idPropriete)">Edit</button> </td> 
+	<td *ngIf="propriete.author==idUser"><button type="button" (click)="deletePropriete(propriete.idPropriete)">Delete</button></td>
+  </tr>
+</table> 

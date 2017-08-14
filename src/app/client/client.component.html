@@ -1,0 +1,173 @@
+<h1 class="title">Gerer Client</h1>
+<div class="main-content">
+	<div class="container-fluid">
+		<div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header" data-background-color="red">
+					<h3 *ngIf="clientIdToUpdate; else create" class="title"> 
+							Update Client for Id: {{clientIdToUpdate}}
+					</h3>
+					<ng-template #create >
+						<h3 class="title"> Create New Client </h3>
+					</ng-template>
+				</div>
+					<div class="card-content">
+						<form [formGroup]="clientForm" (ngSubmit)="onClientFormSubmit()">
+							<div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group form-black label-floating is-empty">
+                                    <label class="control-label">LastName</label>
+                                    <input type="text" class="form-control" formControlName="nomClient">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group form-black label-floating is-empty">
+                                    <label class="control-label">Firstname</label>
+                                    <input type="text" class="form-control" formControlName="prenomClient">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group form-black label-floating is-empty">
+                                    <label class="control-label">Email address</label>
+                                    <input type="email" class="form-control" formControlName="mailClient">
+                                </div>
+                            </div>
+                        </div>
+						<div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group form-black label-floating is-empty">
+                                    <label class="control-label">Number of GSM</label>
+                                    <input type="number" class="form-control" formControlName="telClient">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group form-black label-floating is-empty">
+                                    <label class="control-label">BirthDate</label>
+                                    <input type="date" class="form-control" formControlName="dateNaissance">
+                                </div>
+                            </div>
+                        </div>
+						<div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group form-black label-floating is-empty">
+                                    <label class="control-label">author</label>
+                                    <input type="text" class="form-control" formControlName="author">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group form-black label-floating is-empty">
+                                    <label class="control-label">Type of Client</label>
+                                    <input type="text" class="form-control" formControlName="typeClient">
+                                </div>
+                            </div>
+                        </div>
+						<div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group form-black label-floating is-empty">
+                                    <label class="control-label">CIN numberr</label>
+                                    <input type="number" class="form-control" formControlName="cinClient">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group form-black label-floating is-empty">
+                                    <label class="control-label">Date of CIN edition</label>
+                                    <input type="date" class="form-control" formControlName="dateCINClient">
+                                </div>
+                            </div>
+                        </div>
+						<div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group form-black label-floating is-empty">
+                                    <label class="control-label">File</label>
+                                    <input type="file"
+										ngFileSelect
+										[options]="options"
+										(change)="fileEvent($event)" 
+										(onUpload)="handleUpload($event)"
+										(beforeUpload)="beforeUpload($event)">
+ 
+											<!-- drag & drop file example-->
+										<style>
+											.file-over { border: dotted 3px red; } /* Default class applied to drop zones on over */
+										</style> 
+										<div ngFileDrop
+											[options]="options"
+											(change)="fileEvent($event)"
+											(onUpload)="handleUpload($event)"
+											[ngClass]="{'file-over': hasBaseDropZoneOver}"
+											(onFileOver)="fileOverBase($event)"
+											(beforeUpload)="beforeUpload($event)">
+										</div>
+										<br>
+										Response: {{ uploadFile | json }}
+                                </div>
+                            </div>
+                        </div>
+						
+
+                        <button *ngIf="!clientIdToUpdate" class="btn btn-danger pull-right">{{ 'Create' | translate}}  </button>
+						<button *ngIf="clientIdToUpdate" class="btn btn-danger pull-right">Update</button>
+						<button (click)="backToCreateClient()" *ngIf="clientIdToUpdate" class="btn btn-danger pull-right">Go Back</button>
+                        <div class="clearfix"></div>
+							
+					</form> 
+					<br/>
+					<div *ngIf="statusCode; else processing">
+						<div *ngIf="statusCode === 201" [ngClass] = "'success'">
+							Client added successfully.
+					</div>   
+					<div *ngIf="statusCode === 409" [ngClass] = "'success'">
+							Client already exists.
+					</div>   	
+					<div *ngIf="statusCode === 200" [ngClass] = "'success'">
+							Client updated successfully.
+					</div>   	      
+					<div *ngIf="statusCode === 204" [ngClass] = "'success'">
+						Client deleted successfully.
+					</div>   	   
+					<div *ngIf="statusCode === 500" [ngClass] = "'error'">
+							Internal Server Error.
+					</div>   	
+					</div>
+						<ng-template #processing>
+							<img *ngIf="requestProcessing" src="assets/load.gif">
+						</ng-template>
+					</div>
+				
+			</div>
+		</div>
+		</div>
+	</div>
+</div>
+
+<h3>Client Details</h3>
+<table>
+  <tr>
+	<th> Id</th> 
+	<th>Firstname</th>
+	<th>Name</th>
+	<th>E-Mail</th>
+	<th>GSM</th>
+	<th>BirthDate</th>
+	<th>Author</th>
+	<th>CIN</th>
+	<th>CIN edition</th>
+	<th>Client Type</th>
+	<th></th><th></th>
+  </tr>
+  <tr *ngFor="let client of allClients" >
+        <td *ngIf="client.author==idUser">{{client.idClient}}</td>
+		<td *ngIf="client.author==idUser">{{client.nomClient}}</td> 
+		<td *ngIf="client.author==idUser">{{client.prenomClient}}</td>
+		<td *ngIf="client.author==idUser">{{client.mailClient}}</td>
+		<td *ngIf="client.author==idUser">{{client.telClient}}</td>
+		<td *ngIf="client.author==idUser">{{client.dateNaissance}}</td>
+		<td *ngIf="client.author==idUser">{{client.author}}</td>
+		<td *ngIf="client.author==idUser">{{client.cinClient}}</td>
+		<td *ngIf="client.author==idUser">{{client.dateCINClient}}</td>
+		<td *ngIf="client.author==idUser">{{client.typeClient}}</td>
+	<td *ngIf="client.author==idUser"><button type="button" (click)="loadClientToEdit(client.idClient)">Edit</button> </td> 
+	<td *ngIf="client.author==idUser"><button type="button" (click)="deleteClient(client.idClient)">Delete</button></td>
+  </tr>
+</table> 
