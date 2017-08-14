@@ -1,53 +1,30 @@
-import { Component,OnInit } from '@angular/core';
-import { TranslateService } from './translate';
+import { Component, OnInit } from '@angular/core';
+import {LocationStrategy, PlatformLocation, Location} from '@angular/common';
+
+declare var $:any;
 
 @Component({
-   selector: 'app-root',
-   template: `
-    
-   <div class="btn-group">
-        <button *ngFor="let lang of supportedLangs" (click)="selectLang(lang.value)" class="btn btn-default" [class.btn-primary]="isCurrentLang(lang.value)">
-            {{ lang.display }}
-        </button>
-    </div>
-   <nav>
-		<a routerLink="/login" routerLinkActive="active">Login</a>
-		<a routerLink="/signup" routerLinkActive="active">Sign Up</a>
-	</nav>
-  <router-outlet></router-outlet>
-   
-             `
+    selector: 'app-root',
+    templateUrl: 'app.component.html'
 })
-export class AppComponent { 
-	public translatedText: string;
-		public supportedLangs: any[];
 
-    constructor(private _translate: TranslateService) { }
-
-    ngOnInit() {
-        // standing data
-         this.supportedLangs = [
-        { display: 'English', value: 'en' },
-        { display: 'Français', value: 'fr' },
-        ];
-
-        // set current langage
-        this.selectLang('en');
-    } 
-
-     isCurrentLang(lang: string) {
-        // check if the selected lang is current lang
-        return lang === this._translate.currentLang;
+export class AppComponent implements OnInit{
+    location: Location;
+    constructor(location:Location) {
+        this.location = location;
     }
-
-    selectLang(lang: string) {
-        // set current lang;
-        this._translate.use(lang);
-        this.refreshText();
-    } 
-
-     refreshText() {
-        // refresh translation when language change
-        this.translatedText = this._translate.instant('Create');
-    } 
-} 
+    ngOnInit(){
+        $.getScript('../assets/js/material-dashboard.js');
+        $.getScript('../assets/js/initMenu.js');
+    }
+    public isMaps(path){
+        var titlee = this.location.prepareExternalUrl(this.location.path());
+        titlee = titlee.slice( 1 );
+        if(path == titlee){
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+}

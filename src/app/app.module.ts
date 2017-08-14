@@ -1,69 +1,37 @@
-import { NgModule } from '@angular/core';
+import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule,ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { HttpModule } from '@angular/http';
-import { RouterModule }   from '@angular/router';
+import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 import { Ng2UploaderModule } from 'ng2-uploader';
 import { ImageUploadModule } from "angular2-image-upload";
 
-import { AppComponent }  from './app.component';
-import { ClientComponent }  from './client/client.component';
-import { ContratComponent }  from './contrat/contrat.component';
-import { ProprieteComponent }  from './propriete/propriete.component';
-import { DepensesComponent }  from './depenses/depenses.component';
-import { CatTaxonomieComponent } from './cattaxonomie/cattaxonomie.component';
-import { PayementComponent }  from './payement/payement.component';
-import { LoginComponent } from './login/login.component';
-import { CanActivateAuthGuard } from './can-activate.authguard';
-import { Signup } from './signup/signup';
+import { AppComponent }   from './app.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
-import { ClientService }  from './client/client.service';
-import { ProprieteService }  from './propriete/propriete.service';
-import { ContratService } from './contrat/contrat.service';
-import { DepensesService }  from './depenses/depenses.service';
-import { CatTaxonomieService }  from './cattaxonomie/cattaxonomie.service';
-import { PayementService }  from './payement/payement.service';
-import { AuthenticationService } from './authentication.service';
-import { TRANSLATION_PROVIDERS, TranslatePipe, TranslateService }   from './translate';
+import { DashboardModule } from './dashboard/dashboard.module';
+import { SidebarModule } from './sidebar/sidebar.module';
+import { FooterModule } from './shared/footer/footer.module';
+import { NavbarModule} from './shared/navbar/navbar.module';
 
-import { appRouterModule } from "./app.routes";
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 @NgModule({
-  imports: [     
+    imports:      [
         BrowserModule,
-	HttpModule,
-	FormsModule,
-	ReactiveFormsModule,
+		HttpModule,
+		FormsModule,
+		ReactiveFormsModule,
 	Ng2UploaderModule,
 	ImageUploadModule.forRoot(),
-	appRouterModule
-  ],
-  declarations: [
-        AppComponent,
-		ClientComponent,
-		ContratComponent,
-		ProprieteComponent,
-		DepensesComponent,
-		CatTaxonomieComponent,
-		LoginComponent,
-		Signup,
-		PayementComponent,
-		TranslatePipe
-  ],
-  providers: [
-		ClientService,
-        ContratService,
-		ProprieteService,
-		DepensesService,
-		CatTaxonomieService,
-		PayementService,
-		AuthenticationService,
-		CanActivateAuthGuard,
-	TRANSLATION_PROVIDERS, TranslateService
-
-  ],
-  bootstrap: [
-        AppComponent
-  ]
+        DashboardModule,
+        SidebarModule,
+        NavbarModule,
+        FooterModule,
+        RouterModule.forRoot([])
+    ],
+    declarations: [ AppComponent, DashboardComponent ],
+    providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}],
+    bootstrap:    [ AppComponent ]
 })
-export class AppModule { } 
+export class AppModule { }
